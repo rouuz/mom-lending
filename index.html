@@ -1,0 +1,1246 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nina Popova - диагностика точек потери прибыли</title>
+  <meta name="description" content="Бесплатный экспресс-аудит для собственников малого и среднего бизнеса: найдем, где теряются деньги, клиенты и время команды.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Condensed:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d1a12;
+      --black: #11130d;
+      --paper: #edf0e6;
+      --paper-soft: #dfe7d3;
+      --muted: #9aa38e;
+      --line: rgba(223, 231, 211, .13);
+      --line-dark: rgba(31, 32, 29, .16);
+      --accent: #dfffd2;
+      --accent-strong: #89a75e;
+      --blue: #536f3d;
+      --max: 860px;
+      --display: "Bebas Neue", "Arial Narrow", Arial, sans-serif;
+      --body: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--paper);
+      background:
+        linear-gradient(rgba(223, 231, 211, .052) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(223, 231, 211, .052) 1px, transparent 1px),
+        #17180f;
+      background-size: 92px 92px;
+      font-family: var(--body);
+      line-height: 1.4;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(90deg, rgba(12, 24, 16, .78), rgba(29, 26, 18, .54) 34%, rgba(29, 26, 18, .54) 66%, rgba(12, 24, 16, .78)),
+        linear-gradient(180deg, rgba(10, 17, 11, .28), rgba(12, 12, 8, .88)),
+        url("https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80") center / cover;
+      filter: saturate(.74) contrast(1.1) brightness(.58);
+      content: "";
+    }
+
+    body::after {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(rgba(223, 231, 211, .055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(223, 231, 211, .045) 1px, transparent 1px);
+      background-size: 92px 92px;
+      pointer-events: none;
+      content: "";
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .page {
+      overflow: hidden;
+      padding: clamp(32px, 6vw, 76px) 14px 14px;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100vw - 28px));
+      margin: 0 auto;
+    }
+
+    .hero-card {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      border: 1px solid var(--line-dark);
+      border-radius: 10px;
+      color: var(--black);
+      background:
+        linear-gradient(rgba(31, 32, 29, .07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31, 32, 29, .07) 1px, transparent 1px),
+        var(--paper);
+      background-size: 76px 76px;
+      box-shadow: 0 34px 90px rgba(0, 0, 0, .28);
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: 74px repeat(4, 1fr);
+      border-bottom: 1px solid var(--line-dark);
+      min-height: 52px;
+      background: rgba(237, 240, 230, .86);
+    }
+
+    .menu-icon,
+    .nav-link {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      border-right: 1px solid var(--line-dark);
+      padding: 0 22px;
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+
+    .nav-link {
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-link::after {
+      width: 5px;
+      height: 5px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: currentColor;
+      content: "";
+    }
+
+    .menu-icon {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .menu-icon span,
+    .menu-icon::before,
+    .menu-icon::after {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--black);
+      content: "";
+    }
+
+    .menu-icon {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hero-media {
+      position: absolute;
+      inset: 52px 0 0 0;
+      z-index: 1;
+      width: min(500px, 58vw);
+      margin-left: auto;
+      opacity: .9;
+      filter: grayscale(1) contrast(1.1);
+    }
+
+    .hero-media::before {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(90deg, var(--paper) 0%, rgba(243,244,236,.25) 35%, rgba(243,244,236,0) 62%);
+      content: "";
+    }
+
+    .hero-media::after {
+      position: absolute;
+      right: -20%;
+      bottom: -18%;
+      z-index: 2;
+      width: 78%;
+      height: 44%;
+      background: var(--paper);
+      filter: blur(24px);
+      content: "";
+    }
+
+    .hero-media img {
+      object-position: 58% center;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      min-height: 378px;
+      padding: clamp(34px, 5vw, 54px) clamp(22px, 4vw, 48px) 30px;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      align-self: start;
+      gap: 12px;
+      max-width: max-content;
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark::before {
+      width: 46px;
+      height: 1px;
+      background: var(--black);
+      content: "";
+    }
+
+    .hero-title {
+      align-self: center;
+      max-width: 720px;
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(72px, 13.5vw, 164px);
+      font-weight: 400;
+      line-height: .78;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .hero-title span {
+      display: block;
+    }
+
+    .hero-title .outline {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--black);
+      text-stroke: 2px var(--black);
+    }
+
+    .hero-bottom {
+      display: grid;
+      grid-template-columns: minmax(220px, 330px) minmax(220px, 360px);
+      align-items: end;
+      justify-content: space-between;
+      gap: 28px;
+      align-self: end;
+    }
+
+    .hero-note {
+      max-width: 320px;
+      margin: 0 0 18px;
+      color: rgba(18, 19, 15, .78);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.08;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      border: 1px solid rgba(18, 19, 15, .18);
+      background: var(--accent);
+      color: var(--black);
+      padding: 0 20px;
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
+
+    .cta:hover,
+    .cta:focus-visible {
+      background: #f0ffe9;
+      border-color: rgba(18, 19, 15, .4);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .cta.dark {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .side-note {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 14px;
+      max-width: 360px;
+      color: rgba(18, 19, 15, .82);
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .side-note::before {
+      height: 1px;
+      margin-top: 9px;
+      background: currentColor;
+      content: "";
+    }
+
+    .section {
+      padding: clamp(66px, 8vw, 108px) 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 116px minmax(0, 1.1fr) minmax(220px, .9fr);
+      gap: clamp(20px, 3vw, 48px);
+      align-items: start;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .eyebrow::before,
+    .eyebrow::after {
+      content: "[ ";
+    }
+
+    .eyebrow::after {
+      content: " ]";
+    }
+
+    .headline {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(40px, 5.8vw, 68px);
+      font-weight: 400;
+      line-height: .88;
+      letter-spacing: .01em;
+      word-spacing: .08em;
+      text-transform: uppercase;
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+
+    .headline .accent {
+      color: var(--accent);
+    }
+
+    .lead {
+      max-width: 520px;
+      margin: 0;
+      color: rgba(243, 244, 236, .75);
+      font-size: clamp(16px, 1.55vw, 19px);
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .lead + .cta {
+      margin-top: 34px;
+    }
+
+    .scatter {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: clamp(18px, 2.5vw, 34px);
+      min-height: 420px;
+      margin-top: clamp(64px, 8vw, 108px);
+      align-items: end;
+    }
+
+    .mini-card {
+      position: relative;
+      min-height: 128px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #0f100d;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, .24);
+    }
+
+    .mini-card:nth-child(1) {
+      grid-column: 1 / span 2;
+      transform: translateY(-26px);
+    }
+
+    .mini-card:nth-child(2) {
+      grid-column: 3 / span 2;
+      transform: translateY(-70px);
+    }
+
+    .mini-card:nth-child(3) {
+      grid-column: 5 / span 2;
+    }
+
+    .mini-card:nth-child(4) {
+      grid-column: 7 / span 2;
+      transform: translateY(-112px);
+    }
+
+    .mini-card img {
+      filter: grayscale(1) contrast(1.06) brightness(.78);
+    }
+
+    .mini-card::after {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 48px 10px 9px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, .88));
+      color: #fff;
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: .96;
+      text-transform: uppercase;
+      content: attr(data-title);
+    }
+
+    .mini-card::before {
+      position: absolute;
+      right: -7px;
+      bottom: 28px;
+      z-index: 2;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--paper);
+      content: "";
+    }
+
+    .dark-band {
+      margin-inline: -14px;
+      padding-inline: 14px;
+      background: rgba(29, 26, 18, .96);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+      gap: clamp(28px, 6vw, 86px);
+      align-items: start;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 1px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .check-list li {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 18px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+      color: rgba(243, 244, 236, .78);
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 1.16;
+    }
+
+    .check-list li::before {
+      width: 9px;
+      height: 9px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      content: "";
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .matrix-item {
+      min-height: 230px;
+      padding: 18px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(18, 19, 15, .2);
+    }
+
+    .matrix-item strong {
+      display: block;
+      margin-bottom: 76px;
+      font-family: var(--display);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .matrix-item p {
+      margin: 0;
+      color: rgba(243, 244, 236, .68);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+
+    .deliverables {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: clamp(36px, 5vw, 70px);
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .deliverable {
+      min-height: 200px;
+      padding: 20px;
+      background: var(--ink);
+    }
+
+    .num {
+      display: block;
+      margin-bottom: 48px;
+      color: var(--accent);
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .deliverable h3,
+    .process-step h3 {
+      margin: 0 0 14px;
+      font-family: var(--display);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: .88;
+      text-transform: uppercase;
+    }
+
+    .deliverable p,
+    .process-step p {
+      margin: 0;
+      color: rgba(243, 244, 236, .68);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .audit-panel {
+      display: grid;
+      grid-template-columns: minmax(280px, .9fr) minmax(0, 1.1fr);
+      gap: clamp(28px, 5vw, 74px);
+      align-items: stretch;
+    }
+
+    .audit-visual {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #0f100d;
+    }
+
+    .audit-visual img {
+      filter: grayscale(1) contrast(1.1) brightness(.7);
+    }
+
+    .audit-visual::after {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(223,255,213,.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(223,255,213,.18) 1px, transparent 1px),
+        linear-gradient(180deg, transparent, rgba(18, 19, 15, .9));
+      background-size: 72px 72px, 72px 72px, auto;
+      content: "";
+    }
+
+    .audit-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 520px;
+      padding: clamp(28px, 5vw, 54px);
+      color: var(--black);
+      background: var(--paper);
+    }
+
+    .audit-card h2 {
+      max-width: 580px;
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(50px, 8vw, 88px);
+      font-weight: 400;
+      line-height: .84;
+      text-transform: uppercase;
+    }
+
+    .audit-card p {
+      max-width: 540px;
+      margin: 26px 0 0;
+      color: rgba(18, 19, 15, .72);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+
+    .audit-points {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      margin-top: 38px;
+      background: rgba(18, 19, 15, .16);
+      border: 1px solid rgba(18, 19, 15, .16);
+    }
+
+    .audit-points span {
+      min-height: 88px;
+      padding: 18px;
+      background: var(--paper);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .method {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 520px);
+      gap: clamp(28px, 6vw, 90px);
+      align-items: center;
+    }
+
+    .method-map {
+      position: relative;
+      min-height: 470px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(232,235,225,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,235,225,.08) 1px, transparent 1px);
+      background-size: 68px 68px;
+    }
+
+    .map-node {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 118px;
+      height: 118px;
+      border: 1px solid rgba(223, 255, 213, .62);
+      border-radius: 50%;
+      color: var(--accent);
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: .96;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .map-node:nth-child(1) { left: 8%; top: 10%; }
+    .map-node:nth-child(2) { right: 13%; top: 16%; }
+    .map-node:nth-child(3) { left: 35%; top: 39%; width: 144px; height: 144px; color: var(--paper); border-color: var(--paper); }
+    .map-node:nth-child(4) { left: 14%; bottom: 11%; }
+    .map-node:nth-child(5) { right: 8%; bottom: 12%; }
+
+    .method-copy {
+      max-width: 560px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .tag-row span {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      color: rgba(243, 244, 236, .72);
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .process {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .process-step {
+      min-height: 260px;
+      padding: 22px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .final {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(320px, .68fr);
+      gap: clamp(28px, 6vw, 82px);
+      align-items: start;
+      padding-bottom: clamp(54px, 8vw, 104px);
+    }
+
+    .form {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      background: rgba(18, 19, 15, .26);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: rgba(243, 244, 236, .06);
+      color: var(--paper);
+      padding: 15px 16px;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: rgba(223, 255, 213, .7);
+    }
+
+    .field textarea {
+      min-height: 116px;
+      resize: vertical;
+    }
+
+    .form .cta {
+      width: 100%;
+      border-color: transparent;
+      cursor: pointer;
+    }
+
+    .micro {
+      margin: 0;
+      color: rgba(243, 244, 236, .55);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 22px;
+      padding: 28px 0 14px;
+      color: rgba(243, 244, 236, .5);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        grid-template-columns: 64px repeat(2, 1fr);
+      }
+
+      .topbar .nav-link:nth-of-type(n+3) {
+        display: none;
+      }
+
+      .hero-card {
+        min-height: 720px;
+      }
+
+      .hero-media {
+        inset-top: 64px;
+        width: 78vw;
+        opacity: .72;
+      }
+
+      .hero-copy {
+        min-height: 656px;
+      }
+
+      .section-grid,
+      .two-column,
+      .audit-panel,
+      .method,
+      .final {
+        grid-template-columns: 1fr;
+      }
+
+      .scatter {
+        grid-template-columns: repeat(4, 1fr);
+        min-height: 640px;
+      }
+
+      .mini-card:nth-child(n) {
+        grid-column: span 2;
+      }
+
+      .matrix {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .deliverables,
+      .process {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        padding: 8px;
+      }
+
+      .shell {
+        width: calc(100vw - 16px);
+      }
+
+      .hero-card {
+        border-radius: 18px;
+        min-height: 680px;
+      }
+
+      .topbar {
+        grid-template-columns: 54px 1fr;
+      }
+
+      .topbar .nav-link:nth-of-type(n+2) {
+        display: none;
+      }
+
+      .menu-icon,
+      .nav-link {
+        min-height: 56px;
+        padding: 0 18px;
+      }
+
+      .hero-media {
+        inset: 56px -18vw 0 auto;
+        width: 102vw;
+      }
+
+      .hero-copy {
+        min-height: 624px;
+        padding: 34px 20px 24px;
+      }
+
+      .hero-title {
+        font-size: clamp(58px, 21vw, 94px);
+      }
+
+      .hero-title .outline {
+        -webkit-text-stroke-width: 1px;
+        text-stroke-width: 1px;
+      }
+
+      .hero-bottom {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .side-note {
+        max-width: 270px;
+        font-size: 15px;
+      }
+
+      .headline {
+        font-size: clamp(30px, 8.2vw, 32px);
+        line-height: .94;
+        overflow-wrap: anywhere;
+      }
+
+      .headline .accent {
+        display: block;
+      }
+
+      .scatter {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        align-items: stretch;
+      }
+
+      .mini-card:nth-child(n) {
+        grid-column: auto;
+        transform: none;
+      }
+
+      .mini-card {
+        min-height: 220px;
+      }
+
+      .matrix,
+      .deliverables,
+      .audit-points,
+      .process {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix-item,
+      .deliverable,
+      .process-step {
+        min-height: auto;
+      }
+
+      .audit-visual,
+      .audit-card {
+        min-height: 420px;
+      }
+
+      .method-map {
+        min-height: 390px;
+      }
+
+      .map-node {
+        width: 96px;
+        height: 96px;
+        font-size: 12px;
+      }
+
+      .map-node:nth-child(3) {
+        width: 116px;
+        height: 116px;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero-card shell" id="top">
+      <nav class="topbar" aria-label="Главная навигация">
+        <a class="menu-icon" href="#audit" aria-label="К форме заявки"><span></span></a>
+        <a class="nav-link" href="#mission">Миссия</a>
+        <a class="nav-link" href="#for-whom">Для кого</a>
+        <a class="nav-link" href="#method">Метод</a>
+        <a class="nav-link" href="#audit">Контакты</a>
+      </nav>
+
+      <div class="hero-media" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=84" alt="">
+      </div>
+
+      <div class="hero-copy">
+        <p class="brand-mark">Nina Popova</p>
+        <h1 class="hero-title">
+          <span>Точки</span>
+          <span class="outline">потерь</span>
+        </h1>
+        <div class="hero-bottom">
+          <div>
+            <p class="hero-note">Найдите, где ваш бизнес теряет деньги, клиентов и время команды.</p>
+            <a class="cta dark" href="#audit">Экспресс-аудит</a>
+          </div>
+          <p class="side-note">За 20-30 минут определим первые зоны потерь и что стоит проверить глубже.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="mission">
+      <div class="section-grid">
+        <p class="eyebrow">позиция</p>
+        <h2 class="headline">Не услуги аналитика. <span class="accent">Понятный результат</span> для собственника.</h2>
+        <div>
+          <p class="lead">Диагностика по методологии Нины Поповой выявляет причины потери прибыли, показывает финансовый эффект и формирует план действий: что чинить в первую очередь.</p>
+          <a class="cta" href="#audit">Получить аудит</a>
+        </div>
+      </div>
+
+      <div class="scatter" aria-label="Ключевые результаты диагностики">
+        <article class="mini-card" data-title="Где теряются клиенты">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=540&q=82" alt="">
+        </article>
+        <article class="mini-card" data-title="Что съедает бюджет">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=540&q=82" alt="">
+        </article>
+        <article class="mini-card" data-title="Где процессы вручную">
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=540&q=82" alt="">
+        </article>
+        <article class="mini-card" data-title="Что влияет на прибыль">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=540&q=82" alt="">
+        </article>
+      </div>
+    </section>
+
+    <section class="section dark-band" id="for-whom">
+      <div class="shell two-column">
+        <div>
+          <p class="eyebrow">для кого</p>
+          <h2 class="headline">Эта диагностика подойдет, если бизнес растет, а ясности больше не становится.</h2>
+        </div>
+        <ul class="check-list">
+          <li>Продажи есть, но прибыль ниже ожиданий.</li>
+          <li>Заявки приходят, но часть клиентов теряется.</li>
+          <li>Команда работает, но процессы держатся на собственнике.</li>
+          <li>Маркетинг запускается, но непонятно, что реально окупается.</li>
+          <li>Много ручных задач, хаоса и повторяющихся ошибок.</li>
+          <li>Деньги “утекают”, но точная причина не видна.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-grid">
+        <p class="eyebrow">анализ</p>
+        <h2 class="headline">Какие “дыры” выявляет аналитика</h2>
+        <p class="lead">Смотрим не на один отдел, а на всю бизнес-систему: как клиент приходит, где теряется, что делает команда, какие решения принимаются без цифр.</p>
+      </div>
+      <div class="matrix">
+        <article class="matrix-item">
+          <strong>Продажи</strong>
+          <p>Где теряются клиенты, почему не дожимают заявки, какие этапы воронки не контролируются.</p>
+        </article>
+        <article class="matrix-item">
+          <strong>Маркетинг</strong>
+          <p>Какие каналы дают результат, а какие съедают бюджет. Понятен ли оффер и повторные касания.</p>
+        </article>
+        <article class="matrix-item">
+          <strong>Процессы</strong>
+          <p>Где задачи делаются вручную без необходимости и где собственник становится узким горлом.</p>
+        </article>
+        <article class="matrix-item">
+          <strong>Финансы</strong>
+          <p>Где бизнес теряет маржу, какие действия не дают эффекта и где решения принимаются без цифр.</p>
+        </article>
+        <article class="matrix-item">
+          <strong>ИИ и авто</strong>
+          <p>Какие повторяющиеся задачи можно ускорить без расширения штата и лишней сложности.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-grid">
+        <p class="eyebrow">результат</p>
+        <h2 class="headline"><span class="accent">Не отчет ради отчета.</span> Карта проблем и порядок действий.</h2>
+        <p class="lead">После диагностики вы получаете то, что помогает собственнику принимать решения без абстрактной терминологии и “общих советов”.</p>
+      </div>
+      <div class="deliverables">
+        <article class="deliverable">
+          <span class="num">01</span>
+          <h3>Точки потерь</h3>
+          <p>Список мест, где бизнес теряет деньги, клиентов, время команды или маржу.</p>
+        </article>
+        <article class="deliverable">
+          <span class="num">02</span>
+          <h3>Причины</h3>
+          <p>Понимание, что происходит на самом деле: не симптомы, а слабые места системы.</p>
+        </article>
+        <article class="deliverable">
+          <span class="num">03</span>
+          <h3>Приоритет</h3>
+          <p>Оценка, какие проблемы сильнее всего влияют на прибыль и требуют первого внимания.</p>
+        </article>
+        <article class="deliverable">
+          <span class="num">04</span>
+          <h3>План</h3>
+          <p>Что можно исправить быстро, а что требует системной настройки процессов.</p>
+        </article>
+        <article class="deliverable">
+          <span class="num">05</span>
+          <h3>Рекомендации</h3>
+          <p>Продажи, маркетинг, CRM, регламенты, автоматизация и управленческие таблицы.</p>
+        </article>
+        <article class="deliverable">
+          <span class="num">06</span>
+          <h3>Картина</h3>
+          <p>Прозрачная логика: где бизнес сейчас, что мешает росту и куда двигаться дальше.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="audit-panel">
+        <div class="audit-visual" aria-hidden="true">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=84" alt="">
+        </div>
+        <article class="audit-card">
+          <div>
+            <p class="eyebrow">первый шаг</p>
+            <h2>Бесплатный экспресс-аудит</h2>
+            <p>Короткая первичная диагностика, где мы определяем первые зоны потерь и понимаем, какие процессы стоит проверить глубже.</p>
+            <div class="audit-points">
+              <span>Разбираем текущую ситуацию</span>
+              <span>Фиксируем главную бизнес-задачу</span>
+              <span>Находим первые слабые места</span>
+              <span>Показываем, с чего начать улучшения</span>
+            </div>
+          </div>
+          <a class="cta dark" href="#audit">Пройти аудит</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="method">
+      <div class="method">
+        <div class="method-copy">
+          <p class="eyebrow">методология</p>
+          <h2 class="headline">От входа клиента до денег на счете компании.</h2>
+          <p class="lead">Методология Нины Поповой строится на системном анализе бизнеса. В фокусе не отдельные кусочки, а связи между продажами, маркетингом, командой, процессами и управленческими решениями.</p>
+          <div class="tag-row" aria-label="Зоны методологии">
+            <span>Клиентский путь</span>
+            <span>CRM</span>
+            <span>Воронка</span>
+            <span>Маржа</span>
+            <span>Регламенты</span>
+            <span>Автоматизация</span>
+          </div>
+        </div>
+        <div class="method-map" aria-hidden="true">
+          <span class="map-node">Клиент<br>приходит</span>
+          <span class="map-node">Решение<br>и заявка</span>
+          <span class="map-node">Точка<br>потери</span>
+          <span class="map-node">Команда<br>работает</span>
+          <span class="map-node">Деньги<br>на счете</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark-band">
+      <div class="shell">
+        <div class="section-grid">
+          <p class="eyebrow">формат</p>
+          <h2 class="headline">Как проходит работа</h2>
+          <p class="lead">Сначала выявляем причины потерь, затем можно перейти к настройке процессов, которые помогают бизнесу работать понятнее, быстрее и прибыльнее.</p>
+        </div>
+        <div class="process">
+          <article class="process-step">
+            <span class="num">01</span>
+            <h3>Заявка</h3>
+            <p>Вы оставляете контакты и коротко описываете ситуацию.</p>
+          </article>
+          <article class="process-step">
+            <span class="num">02</span>
+            <h3>Экспресс-аудит</h3>
+            <p>Разбираем текущую картину и главную бизнес-задачу.</p>
+          </article>
+          <article class="process-step">
+            <span class="num">03</span>
+            <h3>Зоны потерь</h3>
+            <p>Определяем первые слабые места в системе.</p>
+          </article>
+          <article class="process-step">
+            <span class="num">04</span>
+            <h3>Глубина</h3>
+            <p>Понимаем, нужна ли подробная диагностика.</p>
+          </article>
+          <article class="process-step">
+            <span class="num">05</span>
+            <h3>План</h3>
+            <p>Формируем приоритетные действия для собственника.</p>
+          </article>
+          <article class="process-step">
+            <span class="num">06</span>
+            <h3>Настройка</h3>
+            <p>Отстраиваем продажи, маркетинг, управление и автоматизацию.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell final" id="audit">
+      <div>
+        <p class="eyebrow">контакт</p>
+        <h2 class="headline">Узнайте, где ваш бизнес теряет деньги</h2>
+        <p class="lead">Оставьте заявку на бесплатный экспресс-аудит. Мы разберем вашу ситуацию, найдем первые точки потерь и определим, какие процессы стоит усилить в первую очередь.</p>
+      </div>
+      <form class="form" action="#" method="post">
+        <label class="field">
+          <span>Имя</span>
+          <input name="name" autocomplete="name" placeholder="Как к вам обращаться">
+        </label>
+        <label class="field">
+          <span>Телефон или мессенджер</span>
+          <input name="contact" autocomplete="tel" placeholder="+7 / Telegram / WhatsApp">
+        </label>
+        <label class="field">
+          <span>Сфера бизнеса</span>
+          <input name="business" placeholder="Услуги, розница, онлайн-проект...">
+        </label>
+        <label class="field">
+          <span>Что сейчас беспокоит</span>
+          <textarea name="problem" placeholder="Где, по вашему ощущению, бизнес теряет деньги?"></textarea>
+        </label>
+        <button class="cta" type="submit">Записаться на аудит</button>
+        <p class="micro">Форма демонстрационная. Для реального сайта ее нужно подключить к CRM, Telegram-боту или почте.</p>
+      </form>
+    </section>
+
+    <footer class="footer shell">
+      <span>Nina Popova / бизнес-аналитика для собственников</span>
+      <a href="#top">Наверх</a>
+    </footer>
+  </main>
+
+  <script>
+    document.querySelector(".form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector("button");
+      const original = button.textContent;
+      button.textContent = "Заявка зафиксирована";
+      setTimeout(() => {
+        button.textContent = original;
+      }, 2200);
+    });
+  </script>
+</body>
+</html>
