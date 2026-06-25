@@ -31,6 +31,14 @@
       --body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --mx: 0;
       --my: 0;
+      --bg-x: 0px;
+      --bg-y: 0px;
+      --scene-x: 0px;
+      --scene-y: 0px;
+      --panel-rx: 0deg;
+      --panel-ry: 0deg;
+      --core-rx: 0deg;
+      --core-ry: 0deg;
     }
 
     * { box-sizing: border-box; }
@@ -45,7 +53,7 @@
       min-width: 320px;
       color: var(--fg);
       background:
-        radial-gradient(circle at calc(50% + var(--mx) * 18px) calc(10% + var(--my) * 18px), rgba(216, 255, 196, .16), transparent 26rem),
+        radial-gradient(circle at calc(50% + var(--bg-x)) calc(10% + var(--bg-y)), rgba(216, 255, 196, .16), transparent 26rem),
         radial-gradient(circle at 10% 18%, rgba(124, 163, 91, .15), transparent 28rem),
         linear-gradient(180deg, rgba(8, 12, 7, .18), var(--bg-deep) 58%),
         var(--bg);
@@ -65,7 +73,7 @@
         linear-gradient(180deg, rgba(7, 9, 6, .08), rgba(7, 9, 6, .92)),
         url("mqtd31c4-image.png") center top / cover no-repeat;
       filter: saturate(.72) contrast(1.18) brightness(.42);
-      transform: scale(1.04) translate3d(calc(var(--mx) * -8px), calc(var(--my) * -8px), 0);
+      transform: scale(1.04) translate3d(var(--scene-x), var(--scene-y), 0);
       content: "";
     }
 
@@ -167,8 +175,8 @@
       background-size: 58px 58px, 58px 58px, auto;
       box-shadow: 0 46px 130px var(--shadow);
       transform:
-        rotateX(calc(var(--my) * -2.2deg))
-        rotateY(calc(var(--mx) * 2.8deg))
+        rotateX(var(--panel-rx))
+        rotateY(var(--panel-ry))
         translateZ(0);
       transform-style: preserve-3d;
       transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
@@ -352,6 +360,7 @@
       position: relative;
       min-height: 500px;
       transform-style: preserve-3d;
+      animation: sceneFloat 7.5s ease-in-out infinite;
     }
 
     .core {
@@ -362,8 +371,8 @@
       aspect-ratio: 1;
       transform:
         translate3d(-50%, -50%, 80px)
-        rotateX(calc(var(--my) * 8deg))
-        rotateY(calc(var(--mx) * -12deg));
+        rotateX(var(--core-rx))
+        rotateY(var(--core-ry));
       transform-style: preserve-3d;
       filter: drop-shadow(0 38px 48px rgba(22, 35, 16, .32));
     }
@@ -435,6 +444,7 @@
       color: var(--ink);
       box-shadow: 0 18px 46px rgba(21, 24, 13, .18);
       transform: translateZ(120px);
+      animation: cardFloatA 5.6s ease-in-out infinite;
     }
 
     .float-card strong {
@@ -457,7 +467,13 @@
     }
 
     .float-card.one { top: 18%; left: 4%; }
-    .float-card.two { right: 6%; bottom: 19%; transform: translateZ(130px) rotate(2deg); }
+    .float-card.two {
+      right: 6%;
+      bottom: 19%;
+      transform: translateZ(130px) rotate(2deg);
+      animation-name: cardFloatB;
+      animation-duration: 6.4s;
+    }
 
     .section {
       padding: clamp(72px, 10vw, 132px) 0;
@@ -1168,6 +1184,21 @@
       to { transform: rotateX(66deg) rotateZ(380deg); }
     }
 
+    @keyframes sceneFloat {
+      0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
+      50% { transform: translate3d(0, -12px, 34px) rotateZ(-.8deg); }
+    }
+
+    @keyframes cardFloatA {
+      0%, 100% { transform: translateZ(120px) translate3d(0, 0, 0) rotate(-1deg); }
+      50% { transform: translateZ(150px) translate3d(6px, -10px, 0) rotate(1deg); }
+    }
+
+    @keyframes cardFloatB {
+      0%, 100% { transform: translateZ(130px) translate3d(0, 0, 0) rotate(2deg); }
+      50% { transform: translateZ(160px) translate3d(-8px, -8px, 0) rotate(-.6deg); }
+    }
+
     @keyframes breathe {
       0%, 100% { transform: translateZ(28px) scale(1); }
       50% { transform: translateZ(44px) scale(1.035); }
@@ -1508,10 +1539,18 @@
 
     if (!reduceMotion) {
       window.addEventListener("pointermove", (event) => {
-        const x = (event.clientX / window.innerWidth - 0.5).toFixed(3);
-        const y = (event.clientY / window.innerHeight - 0.5).toFixed(3);
-        root.style.setProperty("--mx", x);
-        root.style.setProperty("--my", y);
+        const x = event.clientX / window.innerWidth - 0.5;
+        const y = event.clientY / window.innerHeight - 0.5;
+        root.style.setProperty("--mx", x.toFixed(3));
+        root.style.setProperty("--my", y.toFixed(3));
+        root.style.setProperty("--bg-x", `${(x * 18).toFixed(1)}px`);
+        root.style.setProperty("--bg-y", `${(y * 18).toFixed(1)}px`);
+        root.style.setProperty("--scene-x", `${(x * -8).toFixed(1)}px`);
+        root.style.setProperty("--scene-y", `${(y * -8).toFixed(1)}px`);
+        root.style.setProperty("--panel-rx", `${(y * -6).toFixed(2)}deg`);
+        root.style.setProperty("--panel-ry", `${(x * 8).toFixed(2)}deg`);
+        root.style.setProperty("--core-rx", `${(y * 22).toFixed(2)}deg`);
+        root.style.setProperty("--core-ry", `${(x * -28).toFixed(2)}deg`);
       }, { passive: true });
     }
 
